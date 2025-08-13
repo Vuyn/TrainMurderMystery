@@ -3,24 +3,26 @@ package dev.doctor4t.trainmurdermystery.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.doctor4t.trainmurdermystery.client.util.AlwaysVisibleFrustum;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
+import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.chunk.ChunkBuilder;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
+import net.minecraft.util.math.MathHelper;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -42,12 +44,48 @@ public abstract class WorldRendererMixin {
         original.call(instance, camera, frustum, hasForcedFrustum, spectator);
     }
 
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V"))
+    public void render(WorldRenderer instance, Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, Operation<Void> original) {
+
+    }
+
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZF)V"))
+    public void render(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, Operation<Void> original) {
+        applyBlizzardFog();
+    }
+
+    @Unique
+    private static void applyBlizzardFog() {
+        BackgroundRenderer.FogData fogData = new BackgroundRenderer.FogData(BackgroundRenderer.FogType.FOG_SKY);
+
+        fogData.fogStart = 0;
+        fogData.fogEnd = 130;
+
+        fogData.fogShape = FogShape.SPHERE;
+
+        RenderSystem.setShaderFogStart(fogData.fogStart);
+        RenderSystem.setShaderFogEnd(fogData.fogEnd);
+        RenderSystem.setShaderFogShape(fogData.fogShape);
+    }
+
     @Inject(method = "renderLayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/ShaderProgram;bind()V", shift = At.Shift.AFTER), cancellable = true)
     private void render(RenderLayer renderLayer, double x, double y, double z, Matrix4f matrix4f, Matrix4f positionMatrix, CallbackInfo ci, @Local(name = "bl2") boolean bl2, @Local ObjectListIterator<ChunkBuilder.BuiltChunk> objectListIterator, @Local ShaderProgram shaderProgram) {
         GlUniform glUniform = shaderProgram.chunkOffset;
 
+        float trainSpeed = 130; // in kmh
+        int chunkSize = 16;
+        int tileWidth = 15 * chunkSize;
+        int height = 61;
+        int tileLength = 32 * chunkSize;
+        int tileSize = tileLength * 3;
+
+        int time = client.player.age; // TODO: replace with a proper time
+
         while (bl2 ? objectListIterator.hasNext() : objectListIterator.hasPrevious()) {
             boolean tooFar = false;
+
+            ChunkPos chunkPos = new ChunkPos(client.cameraEntity.getBlockPos());
+            client.chunkCullingEnabled = false;
 
             ChunkBuilder.BuiltChunk builtChunk2 = bl2 ? objectListIterator.next() : objectListIterator.previous();
             if (!builtChunk2.getData().isEmpty(renderLayer)) {
@@ -56,24 +94,11 @@ public abstract class WorldRendererMixin {
 
                 if (glUniform != null) {
                     boolean trainSection = ChunkSectionPos.getSectionCoord(blockPos.getY()) >= 4;
-                    float trainSpeed = 130; // in kmh
-
-                    MinecraftClient client = MinecraftClient.getInstance();
-                    ChunkPos chunkPos = new ChunkPos(client.cameraEntity.getBlockPos());
-                    client.chunkCullingEnabled = false;
-
                     float v1 = (float) ((double) blockPos.getX() - x);
                     float v2 = (float) ((double) blockPos.getY() - y);
                     float v3 = (float) ((double) blockPos.getZ() - z);
 
-                    int chunkSize = 16;
                     int zSection = blockPos.getZ() / chunkSize - chunkPos.z;
-                    int tileWidth = 15 * chunkSize;
-                    int height = 61;
-                    int tileLength = 32 * chunkSize;
-                    int tileSize = tileLength * 3;
-
-                    int time = client.player.age; // TODO: replace with a proper time
 
                     float finalX = v1;
                     float finalY = v2;
@@ -93,7 +118,7 @@ public abstract class WorldRendererMixin {
                         finalZ = v3;
                     }
 
-                    if (Math.abs(finalX) < 256) {
+                    if (Math.abs(finalX) < 160) {
                         glUniform.set(
                                 finalX,
                                 finalY,

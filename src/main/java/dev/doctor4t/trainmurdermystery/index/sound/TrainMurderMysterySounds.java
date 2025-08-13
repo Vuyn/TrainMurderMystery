@@ -48,10 +48,8 @@ public interface TrainMurderMysterySounds {
     SoundEvent ENTITY_PLAYER_REVIVE = create("entity.player.revive");
 
     // Ambience
-    SoundEvent AMBIENT_SPACE = create("ambient.space");
-    SoundEvent AMBIENT_SHIP = create("ambient.ship");
-    SoundEvent AMBIENT_SHIP_EMERGENCY = create("ambient.ship_emergency");
-    SoundEvent AMBIENT_SHIP_POWER_OUT = create("ambient.ship_power_out");
+    SoundEvent AMBIENT_TRAIN_INSIDE = create("ambient.train.inside");
+    SoundEvent AMBIENT_TRAIN_OUTSIDE = create("ambient.train.outside");
 
     // UI
     SoundEvent UI_WARNING_LOW = create("ui.warning.low");

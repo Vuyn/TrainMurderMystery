@@ -232,5 +232,17 @@
 			"trainmurdermystery:block/vent_shaft/step3"
 		],
 		"subtitle": "subtitles.block.generic.footsteps"
+	},
+	"ambient.train.inside": {
+		"sounds": [
+			"trainmurdermystery:ambient/train_inside"
+		],
+		"subtitle": "subtitles.ambient.train.inside"
+	},
+	"ambient.train.outside": {
+		"sounds": [
+			"trainmurdermystery:ambient/train_outside"
+		],
+		"subtitle": "subtitles.ambient.train.outside"
 	}
 }

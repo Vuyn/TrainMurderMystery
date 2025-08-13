@@ -1,9 +1,6 @@
 package dev.doctor4t.trainmurdermystery;
 
-import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryBlockEntities;
-import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryBlocks;
-import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryEntities;
-import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryItems;
+import dev.doctor4t.trainmurdermystery.index.*;
 import dev.doctor4t.trainmurdermystery.index.sound.TrainMurderMysterySounds;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -26,5 +23,6 @@ public class TrainMurderMystery implements ModInitializer {
         TrainMurderMysteryBlocks.initialize();
         TrainMurderMysteryItems.initialize();
         TrainMurderMysteryBlockEntities.initialize();
+        TrainMurderMysteryParticles.initialize();
     }
 }

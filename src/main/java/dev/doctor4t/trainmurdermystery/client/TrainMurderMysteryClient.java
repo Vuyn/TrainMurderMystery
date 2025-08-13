@@ -1,11 +1,17 @@
 package dev.doctor4t.trainmurdermystery.client;
 
+import dev.doctor4t.ratatouille.client.util.ambience.AmbienceUtil;
+import dev.doctor4t.ratatouille.client.util.ambience.BackgroundAmbience;
+import dev.doctor4t.ratatouille.index.RatatouilleBlocks;
+import dev.doctor4t.ratatouille.index.RatatouilleSounds;
 import dev.doctor4t.trainmurdermystery.TrainMurderMystery;
 import dev.doctor4t.trainmurdermystery.client.model.TrainMurderMysteryEntityModelLayers;
 import dev.doctor4t.trainmurdermystery.client.render.block_entity.SmallDoorBlockEntityRenderer;
 import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryBlockEntities;
 import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryBlocks;
 import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryEntities;
+import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryParticles;
+import dev.doctor4t.trainmurdermystery.index.sound.TrainMurderMysterySounds;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -33,6 +39,9 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        // Register particle factories
+        TrainMurderMysteryParticles.registerFactories();
+
         // Entity renderer registration
         EntityRendererRegistry.register(TrainMurderMysteryEntities.SEAT, EmptyEntityRenderer::new);
 
@@ -90,6 +99,10 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
                 TrainMurderMysteryBlockEntities.SMALL_WOOD_DOOR,
                 ctx -> new SmallDoorBlockEntityRenderer(TrainMurderMystery.id("textures/entity/small_wood_door.png"), ctx)
         );
+
+        // Ambience
+        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_INSIDE, player -> !player.clientWorld.isSkyVisible(player.getBlockPos()), 10));
+        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_OUTSIDE, player -> player.clientWorld.isSkyVisible(player.getBlockPos()), 10));
     }
 
     public static class CustomModelProvider implements ModelLoadingPlugin {

@@ -8,6 +8,8 @@
     "defaultRequire": 1
   },
   "client": [
+    "client.BackgroundRendererMixin",
+    "client.ClientWorldMixin",
     "client.WorldRendererMixin"
   ]
 }
