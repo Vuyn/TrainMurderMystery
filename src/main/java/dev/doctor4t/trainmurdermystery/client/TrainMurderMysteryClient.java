@@ -3,12 +3,14 @@ package dev.doctor4t.trainmurdermystery.client;
 import dev.doctor4t.ratatouille.client.util.ambience.AmbienceUtil;
 import dev.doctor4t.ratatouille.client.util.ambience.BackgroundAmbience;
 import dev.doctor4t.trainmurdermystery.TrainMurderMystery;
+import dev.doctor4t.trainmurdermystery.cca.TrainMurderMysteryComponents;
 import dev.doctor4t.trainmurdermystery.client.model.TrainMurderMysteryEntityModelLayers;
 import dev.doctor4t.trainmurdermystery.client.render.block_entity.SmallDoorBlockEntityRenderer;
 import dev.doctor4t.trainmurdermystery.index.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.block.Block;
@@ -28,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class TrainMurderMysteryClient implements ClientModInitializer {
+    private static float trainSpeed;
+
     public static boolean shouldDisableHudAndDebug() {
         MinecraftClient client = MinecraftClient.getInstance();
         return (client == null || (client.player != null && !client.player.isCreative() && !client.player.isSpectator()));
@@ -97,8 +101,14 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         );
 
         // Ambience
-        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_INSIDE, player -> !isSkyVisibleAdjacent(player), 20));
-        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_OUTSIDE, TrainMurderMysteryClient::isSkyVisibleAdjacent, 20));
+        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_INSIDE, player -> isTrainMoving() && !isSkyVisibleAdjacent(player), 20));
+        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_OUTSIDE, player -> isTrainMoving() && isSkyVisibleAdjacent(player), 20));
+
+        // Caching components
+        ClientTickEvents.START_WORLD_TICK.register(clientWorld -> {
+            trainSpeed = TrainMurderMysteryComponents.TRAIN.get(clientWorld).getTrainSpeed();
+
+        });
     }
 
     public static boolean isSkyVisibleAdjacent(ClientPlayerEntity player) {
@@ -128,6 +138,14 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         }
 
         return true;
+    }
+
+    public static float getTrainSpeed() {
+        return trainSpeed;
+    }
+
+    public static boolean isTrainMoving() {
+        return trainSpeed > 0;
     }
 
     public static class CustomModelProvider implements ModelLoadingPlugin {

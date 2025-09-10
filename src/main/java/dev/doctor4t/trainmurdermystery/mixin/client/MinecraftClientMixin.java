@@ -15,9 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
     @Shadow
-    public abstract void setScreen(@Nullable Screen screen);
-
-    @Shadow
     @Nullable
     public ClientPlayerEntity player;
 

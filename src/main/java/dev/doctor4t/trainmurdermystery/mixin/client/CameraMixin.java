@@ -1,5 +1,6 @@
 package dev.doctor4t.trainmurdermystery.mixin.client;
 
+import dev.doctor4t.trainmurdermystery.cca.TrainMurderMysteryComponents;
 import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -31,24 +32,26 @@ public class CameraMixin {
 
     @Inject(method = "update", at = @At("RETURN"))
     private void trainmurdermystery$doScreenshake(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-        Camera camera = (Camera) (Object) this;
+        if (TrainMurderMysteryClient.isTrainMoving()) {
+            Camera camera = (Camera) (Object) this;
 
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        int age = player.age;
-        float amplitude = .0025f;
-        float strength = 0.5f;
+            ClientPlayerEntity player = MinecraftClient.getInstance().player;
+            int age = player.age;
+            float amplitude = .0025f;
+            float strength = 0.5f;
 
-        if (TrainMurderMysteryClient.isSkyVisibleAdjacent(player)) {
-            amplitude = .01f;
-            strength = 1f;
+            if (TrainMurderMysteryClient.isSkyVisibleAdjacent(player)) {
+                amplitude = .01f;
+                strength = 1f;
 
-            if (TrainMurderMysteryClient.isExposedToWind(player)) {
-                float yawOffset = randomizeOffset(10);
-                float pitchOffset = randomizeOffset(-10);
-                camera.setRotation(camera.getYaw() + yawOffset, camera.getPitch() + pitchOffset);
+                if (TrainMurderMysteryClient.isExposedToWind(player)) {
+                    float yawOffset = randomizeOffset(10);
+                    float pitchOffset = randomizeOffset(-10);
+                    camera.setRotation(camera.getYaw() + yawOffset, camera.getPitch() + pitchOffset);
+                }
             }
-        }
 
-        camera.setPos(camera.getPos().add(0, Math.sin((age + tickDelta) * strength) / 2f * amplitude, Math.cos((age + tickDelta) * strength) * amplitude));
+            camera.setPos(camera.getPos().add(0, Math.sin((age + tickDelta) * strength) / 2f * amplitude, Math.cos((age + tickDelta) * strength) * amplitude));
+        }
     }
 }

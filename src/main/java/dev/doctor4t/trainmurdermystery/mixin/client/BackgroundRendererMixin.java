@@ -3,13 +3,10 @@ package dev.doctor4t.trainmurdermystery.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.render.BackgroundRenderer;
-import net.minecraft.client.render.Camera;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 
@@ -19,10 +16,5 @@ public class BackgroundRendererMixin {
     private static Vec3d render(Vec3d pos, CubicSampler.RgbFetcher rgbFetcher, Operation<Vec3d> original) {
         Color color = new Color(0xE406060B, true);
         return new Vec3d(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
-    }
-
-    @Inject(method = "applyFog", at = @At("HEAD"))
-    private static void applyFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
-
     }
 }

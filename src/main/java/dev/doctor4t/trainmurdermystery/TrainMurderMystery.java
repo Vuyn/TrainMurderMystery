@@ -1,6 +1,7 @@
 package dev.doctor4t.trainmurdermystery;
 
 import dev.doctor4t.trainmurdermystery.command.GiveRoomKeyCommand;
+import dev.doctor4t.trainmurdermystery.command.SetTrainSpeedCommand;
 import dev.doctor4t.trainmurdermystery.index.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -29,6 +30,7 @@ public class TrainMurderMystery implements ModInitializer {
         // Register commands
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             GiveRoomKeyCommand.register(dispatcher);
+            SetTrainSpeedCommand.register(dispatcher);
         }));
 
     }
@@ -39,7 +41,7 @@ public class TrainMurderMystery implements ModInitializer {
 // TODO: Add temp jamming doors with lockpick
 // TODO: Add ledge block
 // TODO: Remove survival UI
-// TODO: Lock brightness option
+// TODO: Lock brightness option + render distance
 // TODO: Add snack cabinet
 // TODO: Add drink cabinet
 // TODO: Make beds poisonable

@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.doctor4t.trainmurdermystery.cca.TrainMurderMysteryComponents;
 import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
 import dev.doctor4t.trainmurdermystery.client.util.AlwaysVisibleFrustum;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
@@ -13,10 +14,11 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.chunk.ChunkBuilder;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,24 +37,32 @@ public abstract class WorldRendererMixin {
 
     @Shadow private int ticks;
 
+    @Shadow
+    @Nullable
+    private ClientWorld world;
+
     @Inject(method = "method_52816", at = @At(value = "RETURN"), cancellable = true)
     private static void method_52816(Frustum frustum, CallbackInfoReturnable<Frustum> cir) {
         cir.setReturnValue(new AlwaysVisibleFrustum(frustum));
     }
 
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;setupTerrain(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/Frustum;ZZ)V"))
-    public void render(WorldRenderer instance, Camera camera, Frustum frustum, boolean hasForcedFrustum, boolean spectator, Operation<Void> original) {
-        original.call(instance, camera, frustum, hasForcedFrustum, spectator);
-    }
+//    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;setupTerrain(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/Frustum;ZZ)V"))
+//    public void render(WorldRenderer instance, Camera camera, Frustum frustum, boolean hasForcedFrustum, boolean spectator, Operation<Void> original) {
+//        original.call(instance, camera, frustum, hasForcedFrustum, spectator);
+//    }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V"))
     public void render(WorldRenderer instance, Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, Operation<Void> original) {
-
+        if (!TrainMurderMysteryClient.isTrainMoving()) {
+            original.call(instance, matrix4f, projectionMatrix, tickDelta, camera, thickFog, fogCallback);
+        }
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZF)V"))
     public void render(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, Operation<Void> original) {
-        applyBlizzardFog();
+        if (TrainMurderMysteryClient.isTrainMoving()) {
+            applyBlizzardFog();
+        }
     }
 
     @Unique
@@ -70,83 +80,86 @@ public abstract class WorldRendererMixin {
     }
 
     @Inject(method = "renderLayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/ShaderProgram;bind()V", shift = At.Shift.AFTER), cancellable = true)
-    private void render(RenderLayer renderLayer, double x, double y, double z, Matrix4f matrix4f, Matrix4f positionMatrix, CallbackInfo ci, @Local(name = "bl2") boolean bl2, @Local ObjectListIterator<ChunkBuilder.BuiltChunk> objectListIterator, @Local ShaderProgram shaderProgram) {
-        GlUniform glUniform = shaderProgram.chunkOffset;
+    private void render(RenderLayer renderLayer, double x, double y, double z, Matrix4f matrix4f, Matrix4f positionMatrix, CallbackInfo ci, @Local ObjectListIterator<ChunkBuilder.BuiltChunk> objectListIterator, @Local ShaderProgram shaderProgram) {
+        if (TrainMurderMysteryClient.isTrainMoving()) {
+            GlUniform glUniform = shaderProgram.chunkOffset;
 
-        float trainSpeed = 130; // in kmh
-        int chunkSize = 16;
-        int tileWidth = 15 * chunkSize;
-        int height = 61;
-        int tileLength = 32 * chunkSize;
-        int tileSize = tileLength * 3;
+            float trainSpeed = TrainMurderMysteryClient.getTrainSpeed(); // in kmh
+            int chunkSize = 16;
+            int tileWidth = 15 * chunkSize;
+            int height = 61;
+            int tileLength = 32 * chunkSize;
+            int tileSize = tileLength * 3;
 
-        float time = ticks + client.getRenderTickCounter().getTickDelta(true);
+            float time = ticks + client.getRenderTickCounter().getTickDelta(true);
 
-        while (bl2 ? objectListIterator.hasNext() : objectListIterator.hasPrevious()) {
-            boolean tooFar = false;
+            boolean isTranslucent = renderLayer != RenderLayer.getTranslucent();
+            while (isTranslucent ? objectListIterator.hasNext() : objectListIterator.hasPrevious()) {
+                boolean tooFar = false;
 
-            ChunkPos chunkPos = new ChunkPos(client.cameraEntity.getBlockPos());
-            client.chunkCullingEnabled = false;
+                ChunkPos chunkPos = new ChunkPos(client.cameraEntity.getBlockPos());
+                client.chunkCullingEnabled = false;
 
-            ChunkBuilder.BuiltChunk builtChunk2 = bl2 ? objectListIterator.next() : objectListIterator.previous();
-            if (!builtChunk2.getData().isEmpty(renderLayer)) {
-                VertexBuffer vertexBuffer = builtChunk2.getBuffer(renderLayer);
-                BlockPos blockPos = builtChunk2.getOrigin();
+                ChunkBuilder.BuiltChunk builtChunk2 = isTranslucent ? objectListIterator.next() : objectListIterator.previous();
+                if (!builtChunk2.getData().isEmpty(renderLayer)) {
+                    VertexBuffer vertexBuffer = builtChunk2.getBuffer(renderLayer);
+                    BlockPos blockPos = builtChunk2.getOrigin();
 
-                if (glUniform != null) {
-                    boolean trainSection = ChunkSectionPos.getSectionCoord(blockPos.getY()) >= 4;
-                    float v1 = (float) ((double) blockPos.getX() - x);
-                    float v2 = (float) ((double) blockPos.getY() - y);
-                    float v3 = (float) ((double) blockPos.getZ() - z);
+                    if (glUniform != null) {
+                        boolean trainSection = ChunkSectionPos.getSectionCoord(blockPos.getY()) >= 4;
+                        float v1 = (float) ((double) blockPos.getX() - x);
+                        float v2 = (float) ((double) blockPos.getY() - y);
+                        float v3 = (float) ((double) blockPos.getZ() - z);
 
-                    int zSection = blockPos.getZ() / chunkSize - chunkPos.z;
+                        int zSection = blockPos.getZ() / chunkSize - chunkPos.z;
 
-                    float finalX = v1;
-                    float finalY = v2;
-                    float finalZ = v3;
+                        float finalX = v1;
+                        float finalY = v2;
+                        float finalZ = v3;
 
-                    if (zSection <= -8) {
-                        finalX = ((v1 - tileLength + ((time ) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
-                        finalY = (v2 + height);
-                        finalZ = v3 + tileWidth;
-                    } else if (zSection >= 8) {
-                        finalX = ((v1 + tileLength + ((time ) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
-                        finalY = (v2 + height);
-                        finalZ = v3 - tileWidth;
-                    } else if (!trainSection) {
-                        finalX = ((v1 + ((time ) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
-                        finalY = (v2 + height);
-                        finalZ = v3;
+                        if (zSection <= -8) {
+                            finalX = ((v1 - tileLength + ((time) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
+                            finalY = (v2 + height);
+                            finalZ = v3 + tileWidth;
+                        } else if (zSection >= 8) {
+                            finalX = ((v1 + tileLength + ((time) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
+                            finalY = (v2 + height);
+                            finalZ = v3 - tileWidth;
+                        } else if (!trainSection) {
+                            finalX = ((v1 + ((time) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
+                            finalY = (v2 + height);
+                            finalZ = v3;
+                        }
+
+                        if (Math.abs(finalX) < 160) {
+                            glUniform.set(
+                                    finalX,
+                                    finalY,
+                                    finalZ
+                            );
+                            glUniform.upload();
+                        } else {
+                            tooFar = true;
+                        }
                     }
 
-                    if (Math.abs(finalX) < 160) {
-                        glUniform.set(
-                                finalX,
-                                finalY,
-                                finalZ
-                        );
-                        glUniform.upload();
-                    } else {
-                        tooFar = true;
+                    if (!tooFar) {
+                        vertexBuffer.bind();
+                        vertexBuffer.draw();
                     }
-                }
-
-                if (!tooFar) {
-                    vertexBuffer.bind();
-                    vertexBuffer.draw();
                 }
             }
+
+            if (glUniform != null) {
+                glUniform.set(0.0F, 0.0F, 0.0F);
+            }
+
+            shaderProgram.unbind();
+            VertexBuffer.unbind();
+            this.client.getProfiler().pop();
+            renderLayer.endDrawing();
+
+            ci.cancel();
         }
-
-        if (glUniform != null) {
-            glUniform.set(0.0F, 0.0F, 0.0F);
-        }
-
-        shaderProgram.unbind();
-        VertexBuffer.unbind();
-        this.client.getProfiler().pop();
-        renderLayer.endDrawing();
-
-        ci.cancel();
     }
 }
