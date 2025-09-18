@@ -116,6 +116,7 @@ public class TrainMurderMysteryBlockLootTableGen extends FabricBlockLootTablePro
         this.addSelfDrop(TMMBlocks.STRIPPED_CRIMSON_STIPE);
         this.addSelfDrop(TMMBlocks.STRIPPED_WARPED_STIPE);
         this.addSelfDrop(TMMBlocks.PANEL_STRIPES);
+        this.addSelfDrop(TMMBlocks.RAIL_BEAM);
         this.addSelfDrop(TMMBlocks.TRIMMED_RAILING_POST, block -> this.drops(TMMBlocks.TRIMMED_RAILING));
         this.addSelfDrop(TMMBlocks.DIAGONAL_TRIMMED_RAILING, block -> this.drops(TMMBlocks.TRIMMED_RAILING));
         this.addSelfDrop(TMMBlocks.TRIMMED_RAILING);
@@ -148,6 +149,7 @@ public class TrainMurderMysteryBlockLootTableGen extends FabricBlockLootTablePro
         this.addNothingDrop(TMMBlocks.SMALL_GLASS_DOOR);
         this.addNothingDrop(TMMBlocks.SMALL_WOOD_DOOR);
         this.addNothingDrop(TMMBlocks.SMALL_TRAIN_DOOR);
+        this.addNothingDrop(TMMBlocks.WHEEL);
     }
 
     private void addFamily(BlockFamily family) {

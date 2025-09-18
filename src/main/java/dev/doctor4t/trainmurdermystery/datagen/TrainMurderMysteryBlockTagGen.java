@@ -315,7 +315,8 @@ public class TrainMurderMysteryBlockTagGen extends FabricTagProvider.BlockTagPro
                 .add(TMMBlocks.SMOOTH_NAVY_STEEL)
                 .add(TMMBlocks.SMOOTH_NAVY_STEEL_STAIRS)
                 .add(TMMBlocks.SMOOTH_NAVY_STEEL_SLAB)
-                .add(TMMBlocks.SMOOTH_NAVY_STEEL_PANEL);
+                .add(TMMBlocks.SMOOTH_NAVY_STEEL_PANEL)
+                .add(TMMBlocks.RAIL_BEAM);
 
 
 

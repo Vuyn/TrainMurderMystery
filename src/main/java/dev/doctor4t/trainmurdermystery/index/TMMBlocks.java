@@ -80,6 +80,7 @@ public interface TMMBlocks {
     Block SMOOTH_NAVY_STEEL_SLAB = registrar.createWithItem("smooth_navy_steel_slab", new SlabBlock(AbstractBlock.Settings.copy(NAVY_STEEL)), TMMItems.BUILDING_GROUP);
     Block SMOOTH_NAVY_STEEL_PANEL = registrar.createWithItem("smooth_navy_steel_panel", new PanelBlock(AbstractBlock.Settings.copy(NAVY_STEEL)), TMMItems.BUILDING_GROUP);
     Block SMOOTH_NAVY_STEEL_WALL = registrar.createWithItem("smooth_navy_steel_wall", new WallBlock(AbstractBlock.Settings.copy(NAVY_STEEL).solid()), TMMItems.BUILDING_GROUP);
+    Block RAIL_BEAM = registrar.createWithItem("rail_beam", new RailBeamBlock(AbstractBlock.Settings.copy(STAINLESS_STEEL).solid()), TMMItems.DECORATION_GROUP);
 
     // Glass
     Block HULL_GLASS = registrar.createWithItem("hull_glass", new PrivacyGlassBlock(AbstractBlock.Settings.copy(Blocks.BLACK_STAINED_GLASS).strength(-1.0f, 3600000.0f)), TMMItems.BUILDING_GROUP);
@@ -148,6 +149,7 @@ public interface TMMBlocks {
     Block TARNISHED_GOLD_VENT_HATCH = registrar.createWithItem("tarnished_gold_vent_hatch", new VentHatchBlock(AbstractBlock.Settings.copy(STAINLESS_STEEL_VENT_HATCH)), TMMItems.DECORATION_GROUP);
     Block DARK_STEEL_VENT_SHAFT = registrar.createWithItem("dark_steel_vent_shaft", new VentShaftBlock(AbstractBlock.Settings.copy(STAINLESS_STEEL_VENT_SHAFT)), TMMItems.DECORATION_GROUP);
     Block TARNISHED_GOLD_VENT_SHAFT = registrar.createWithItem("tarnished_gold_vent_shaft", new VentShaftBlock(AbstractBlock.Settings.copy(STAINLESS_STEEL_VENT_SHAFT)), TMMItems.DECORATION_GROUP);
+
     // Furniture / Decor
     Block STAINLESS_STEEL_LADDER = registrar.createWithItem("stainless_steel_ladder", new TrainLadderBlock(AbstractBlock.Settings.create().nonOpaque().strength(0.5f).sounds(BlockSoundGroup.LANTERN)), TMMItems.DECORATION_GROUP);
     Block OAK_BRANCH = createBranch("oak_branch", Blocks.OAK_WOOD, registrar);
@@ -206,6 +208,10 @@ public interface TMMBlocks {
     Block SMALL_GLASS_DOOR = registrar.createWithItem("small_glass_door", new SmallDoorBlock(() -> TMMBlockEntities.SMALL_GLASS_DOOR, AbstractBlock.Settings.create().dynamicBounds().strength(-1, 3600000).mapColor(MapColor.CLEAR).dropsNothing().nonOpaque().allowsSpawning(Blocks::never).pistonBehavior(PistonBehavior.BLOCK).sounds(BlockSoundGroup.COPPER_BULB)), TMMItems.DECORATION_GROUP);
     Block SMALL_WOOD_DOOR = registrar.createWithItem("small_wood_door", new SmallDoorBlock(() -> TMMBlockEntities.SMALL_WOOD_DOOR, AbstractBlock.Settings.copy(SMALL_GLASS_DOOR).sounds(BlockSoundGroup.COPPER)), TMMItems.DECORATION_GROUP);
     Block SMALL_TRAIN_DOOR = registrar.createWithItem("small_train_door", new UnblastableDoorBlock(() -> TMMBlockEntities.SMALL_TRAIN_DOOR, AbstractBlock.Settings.copy(SMALL_GLASS_DOOR).sounds(BlockSoundGroup.COPPER)), TMMItems.DECORATION_GROUP);
+
+    // Wheels
+    Block WHEEL = registrar.createWithItem("wheel", new WheelBlock(AbstractBlock.Settings.copy(DARK_STEEL).nonOpaque().sounds(BlockSoundGroup.COPPER)), TMMItems.DECORATION_GROUP);
+
 
     private static Block createBranch(String name, Block wood, BlockRegistrar registrar) {
         return registrar.createWithItem(name, new BranchBlock(AbstractBlock.Settings.copy(wood).mapColor(wood.getDefaultMapColor())), TMMItems.DECORATION_GROUP);

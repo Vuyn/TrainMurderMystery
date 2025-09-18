@@ -16,3 +16,5 @@ accessible field net/minecraft/entity/player/ItemCooldownManager entries Ljava/u
 accessible field net/minecraft/entity/player/ItemCooldownManager$Entry startTick I
 accessible field net/minecraft/entity/player/ItemCooldownManager$Entry endTick I
 accessible field net/minecraft/entity/player/ItemCooldownManager tick I
+
+accessible field net/minecraft/client/render/WorldRenderer ticks I

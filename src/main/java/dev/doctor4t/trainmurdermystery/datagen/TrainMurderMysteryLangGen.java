@@ -156,6 +156,7 @@ public class TrainMurderMysteryLangGen extends FabricLanguageProvider {
         builder.add(TMMBlocks.STRIPPED_CRIMSON_STIPE, "Stripped Crimson Stipe");
         builder.add(TMMBlocks.STRIPPED_WARPED_STIPE, "Stripped Warped Stipe");
         builder.add(TMMBlocks.PANEL_STRIPES, "Panel Stripes");
+        builder.add(TMMBlocks.RAIL_BEAM, "Rail Beam");
         builder.add(TMMBlocks.TRIMMED_RAILING, "Trimmed Railing");
         builder.add(TMMBlocks.CARGO_BOX, "Cargo Box");
         builder.add(TMMBlocks.WHITE_LOUNGE_COUCH, "White Lounge Couch");
@@ -194,6 +195,7 @@ public class TrainMurderMysteryLangGen extends FabricLanguageProvider {
         builder.add(TMMBlocks.SMOOTH_NAVY_STEEL_SLAB, "Smooth Navy Steel slab");
         builder.add(TMMBlocks.SMOOTH_NAVY_STEEL_PANEL, "Smooth Navy Steel panel");
         builder.add(TMMBlocks.SMOOTH_NAVY_STEEL_WALL, "Smooth Navy Steel Wall");
+        builder.add(TMMBlocks.WHEEL, "Wheel");
 
         builder.add(TMMItems.KEY, "Key");
         builder.add(TMMItems.LOCKPICK, "Lockpick");

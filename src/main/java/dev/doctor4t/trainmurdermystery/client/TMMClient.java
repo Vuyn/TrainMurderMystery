@@ -9,6 +9,7 @@ import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
 import dev.doctor4t.trainmurdermystery.cca.WorldGameComponent;
 import dev.doctor4t.trainmurdermystery.client.model.TrainMurderMysteryEntityModelLayers;
 import dev.doctor4t.trainmurdermystery.client.render.block_entity.SmallDoorBlockEntityRenderer;
+import dev.doctor4t.trainmurdermystery.client.render.block_entity.WheelBlockEntityRenderer;
 import dev.doctor4t.trainmurdermystery.client.util.TMMItemTooltips;
 import dev.doctor4t.trainmurdermystery.game.TMMGameLoop;
 import dev.doctor4t.trainmurdermystery.index.*;
@@ -92,6 +93,7 @@ public class TMMClient implements ClientModInitializer {
                 TMMBlocks.STAINLESS_STEEL_WALKWAY,
                 TMMBlocks.DARK_STEEL_WALKWAY,
                 TMMBlocks.PANEL_STRIPES,
+                TMMBlocks.RAIL_BEAM,
                 TMMBlocks.TRIMMED_RAILING_POST,
                 TMMBlocks.DIAGONAL_TRIMMED_RAILING,
                 TMMBlocks.TRIMMED_RAILING,
@@ -107,7 +109,8 @@ public class TMMClient implements ClientModInitializer {
                 TMMBlocks.ELEVATOR_BUTTON,
                 TMMBlocks.STAINLESS_STEEL_SPRINKLER,
                 TMMBlocks.GOLD_SPRINKLER,
-                TMMBlocks.GOLD_ORNAMENT);
+                TMMBlocks.GOLD_ORNAMENT,
+                TMMBlocks.WHEEL);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(),
                 TMMBlocks.RHOMBUS_GLASS,
                 TMMBlocks.PRIVACY_GLASS_PANEL,
@@ -132,6 +135,10 @@ public class TMMClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(
                 TMMBlockEntities.SMALL_TRAIN_DOOR,
                 ctx -> new SmallDoorBlockEntityRenderer(TMM.id("textures/entity/small_train_door.png"), ctx)
+        );
+        BlockEntityRendererFactories.register(
+                TMMBlockEntities.WHEEL,
+                ctx -> new WheelBlockEntityRenderer(TMM.id("textures/entity/wheel.png"), ctx)
         );
 
         // Ambience

@@ -24,11 +24,15 @@ import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class TMMGameLoop {
-    public static void tick(ServerWorld serverWorld) {
-        WorldGameComponent game = TMMComponents.GAME.get(serverWorld);
-        WorldTrainComponent train = TMMComponents.TRAIN.get(serverWorld);
 
-        if (train.getTrainSpeed() > 0) {
+    public static WorldGameComponent gameComponent;
+    public static WorldTrainComponent trainComponent;
+
+    public static void tick(ServerWorld serverWorld) {
+        gameComponent = TMMComponents.GAME.get(serverWorld);
+        trainComponent = TMMComponents.TRAIN.get(serverWorld);
+
+        if (trainComponent.getTrainSpeed() > 0) {
             for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                 // spectator limits
                 if (!isPlayerAliveAndSurvival(player)) {
@@ -37,7 +41,7 @@ public class TMMGameLoop {
             }
         }
 
-        if (game.isRunning()) {
+        if (gameComponent.isRunning()) {
             // kill players who fell off the train
             for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                 if (isPlayerAliveAndSurvival(player) && player.getY() < 63) {
@@ -47,7 +51,7 @@ public class TMMGameLoop {
 
             // check hitman win condition (all targets are dead)
             WinStatus winStatus = WinStatus.HITMEN;
-            for (UUID player : game.getTargets()) {
+            for (UUID player : gameComponent.getTargets()) {
                 if (!isPlayerEliminated(serverWorld.getPlayerByUuid(player))) {
                     winStatus = WinStatus.NONE;
                 }
@@ -56,7 +60,7 @@ public class TMMGameLoop {
             // check passenger win condition (all hitmen are dead)
             if (winStatus == WinStatus.NONE) {
                 winStatus = WinStatus.PASSENGERS;
-                for (UUID player : game.getHitmen()) {
+                for (UUID player : gameComponent.getHitmen()) {
                     if (!isPlayerEliminated(serverWorld.getPlayerByUuid(player))) {
                         winStatus = WinStatus.NONE;
                     }
@@ -68,7 +72,7 @@ public class TMMGameLoop {
                 for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                     player.sendMessage(Text.translatable("game.win." + winStatus.name().toLowerCase(Locale.ROOT)), true);
                 }
-                game.stop();
+                gameComponent.stop();
             }
         }
     }

@@ -108,6 +108,7 @@
   "block.trainmurdermystery.pristine_gold_stairs": "Pristine Gold Stairs",
   "block.trainmurdermystery.pristine_gold_wall": "Pristine Gold Wall",
   "block.trainmurdermystery.privacy_glass_panel": "Privacy Glass",
+  "block.trainmurdermystery.rail_beam": "Rail Beam",
   "block.trainmurdermystery.red_leather_couch": "Red Leather Couch",
   "block.trainmurdermystery.red_trimmed_bed": "Red Trimmed Bed",
   "block.trainmurdermystery.rhombus_glass": "Rhombus Glass",
@@ -166,6 +167,7 @@
   "block.trainmurdermystery.trimmed_railing": "Trimmed Railing",
   "block.trainmurdermystery.wall_lamp": "Wall Lamp",
   "block.trainmurdermystery.warped_stipe": "Warped Stipe",
+  "block.trainmurdermystery.wheel": "Wheel",
   "block.trainmurdermystery.white_hull": "White Hull",
   "block.trainmurdermystery.white_hull_slab": "White Hull Slab",
   "block.trainmurdermystery.white_hull_stairs": "White Hull Stairs",
@@ -225,5 +227,5 @@
   "tip.lockpick.tooltip2": "Sneak-use on a door to jam it for 1 minute (disables the lockpick for 5 minutes)",
   "tip.revolver.rounds": "%s/6 rounds left",
   "tip.revolver.tooltip1": "Right-click to use, point and shoot",
-  "tip.revolver.tooltip2": "Can be used to shoot a door and open it permanently"
+  "tip.revolver.tooltip2": "Can be used to shoot a door and open it permanently (only glass and wooden doors)"
 }

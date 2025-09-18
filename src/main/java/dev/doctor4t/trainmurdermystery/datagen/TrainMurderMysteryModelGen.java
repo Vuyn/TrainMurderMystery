@@ -287,7 +287,8 @@ public class TrainMurderMysteryModelGen extends FabricModelProvider {
         this.registerPole(generator, TMMBlocks.STRIPPED_BAMBOO_POLE, Blocks.STRIPPED_BAMBOO_BLOCK);
         this.registerBranch(generator, TMMBlocks.STRIPPED_CRIMSON_STIPE, Blocks.STRIPPED_CRIMSON_STEM);
         this.registerBranch(generator, TMMBlocks.STRIPPED_WARPED_STIPE, Blocks.STRIPPED_WARPED_STEM);
-        this.registerPanelStripes(generator);
+        this.registerHorizontalAxisBlock(generator, TMMBlocks.PANEL_STRIPES, false);
+        this.registerHorizontalAxisBlock(generator, TMMBlocks.RAIL_BEAM, true);
         this.registerRailing(generator, TMMBlocks.TRIMMED_RAILING, TMMBlocks.TRIMMED_RAILING_POST, TMMBlocks.DIAGONAL_TRIMMED_RAILING);
         this.registerCargoBox(generator, TMMBlocks.CARGO_BOX);
         this.registerLoungeCouch(generator, TMMBlocks.WHITE_LOUNGE_COUCH);
@@ -326,7 +327,7 @@ public class TrainMurderMysteryModelGen extends FabricModelProvider {
         this.registerPanel(generator, TMMBlocks.NAVY_STEEL_TILES_PANEL, TMMBlocks.NAVY_STEEL_TILES);
         this.registerFamily(generator, TMMBlocks.Family.SMOOTH_NAVY_STEEL);
         this.registerPanel(generator, TMMBlocks.SMOOTH_NAVY_STEEL_PANEL, TMMBlocks.SMOOTH_NAVY_STEEL);
-
+        this.registerParticleBlockWithItemSprite(generator, TMMBlocks.WHEEL, TMMBlocks.DARK_STEEL);
     }
 
     @Override
@@ -895,10 +896,9 @@ public class TrainMurderMysteryModelGen extends FabricModelProvider {
                                 .register(Direction.WEST, this.variant(VariantSettings.Y, VariantSettings.Rotation.R90))));
     }
 
-    private void registerPanelStripes(BlockStateModelGenerator generator) {
-        Block block = TMMBlocks.PANEL_STRIPES;
-        generator.registerItemModel(block.asItem());
+    private void registerHorizontalAxisBlock(BlockStateModelGenerator generator, Block block, boolean registerInventoryParent) {
         Identifier model = ModelIds.getBlockModelId(block);
+        if (registerInventoryParent) generator.registerParentedItemModel(block, model);
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(block).coordinate(
                 BlockStateVariantMap.create(PanelStripesBlock.AXIS)
                         .register(Direction.Axis.X, this.model(model).put(VariantSettings.Y, VariantSettings.Rotation.R90))
