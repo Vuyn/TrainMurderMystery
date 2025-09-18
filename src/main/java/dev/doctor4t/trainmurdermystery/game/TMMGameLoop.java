@@ -36,7 +36,7 @@ public class TMMGameLoop {
             for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                 // spectator limits
                 if (!isPlayerAliveAndSurvival(player)) {
-                    limitPlayerToBox(player, new Box(-140, 63, -535.5f - 15, 230, 110, -535.5f + 15));
+                    limitPlayerToBox(player, TMMGameConstants.PLAY_AREA);
                 }
             }
         }
@@ -44,7 +44,7 @@ public class TMMGameLoop {
         if (gameComponent.isRunning()) {
             // kill players who fell off the train
             for (ServerPlayerEntity player : serverWorld.getPlayers()) {
-                if (isPlayerAliveAndSurvival(player) && player.getY() < 63) {
+                if (isPlayerAliveAndSurvival(player) && player.getY() < TMMGameConstants.PLAY_AREA.minY) {
                     killPlayer(player, false);
                 }
             }

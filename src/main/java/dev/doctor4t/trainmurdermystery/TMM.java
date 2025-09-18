@@ -1,6 +1,7 @@
 package dev.doctor4t.trainmurdermystery;
 
 import dev.doctor4t.trainmurdermystery.command.GiveRoomKeyCommand;
+import dev.doctor4t.trainmurdermystery.command.ResetTrainCommand;
 import dev.doctor4t.trainmurdermystery.command.SetTrainSpeedCommand;
 import dev.doctor4t.trainmurdermystery.command.StartGameCommand;
 import dev.doctor4t.trainmurdermystery.game.TMMGameLoop;
@@ -38,6 +39,7 @@ public class TMM implements ModInitializer {
             GiveRoomKeyCommand.register(dispatcher);
             SetTrainSpeedCommand.register(dispatcher);
             StartGameCommand.register(dispatcher);
+            ResetTrainCommand.register(dispatcher);
         }));
 
         // Game loop tick
@@ -49,8 +51,9 @@ public class TMM implements ModInitializer {
 }
 
 // TODO: Add tasks (2-3 hours)
-// TODO: Add wheels and tracks (1h)
 // TODO: Map reset system (1h)
 // TODO: Add lobby (1h)
 // TODO: Nicer starting phase + UI (2h)
 // TODO: System that remembers previous roles and allows cycling of roles (3h)
+// TODO: Train chimney smoke + ringable horn?
+// TODO: Add carpets

@@ -153,7 +153,7 @@ public class TMMClient implements ClientModInitializer {
 
         // Lock options
         OptionLocker.overrideOption("gamma", 0d);
-        //TODO: remove the comment // mfw 15 fps on a 3050 // OptionLocker.overrideOption("renderDistance", 32);
+        OptionLocker.overrideOption("renderDistance", 32); // mfw 15 fps on a 3050 - Cup // haha 🫵 brokie - RAT
         OptionLocker.overrideOption("showSubtitles", false);
         OptionLocker.overrideOption("autoJump", false);
         OptionLocker.overrideSoundCategoryVolume("music", 0.0);

@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.client.util.AlwaysVisibleFrustum;
+import dev.doctor4t.trainmurdermystery.game.TMMGameConstants;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUniform;
@@ -81,7 +82,7 @@ public abstract class WorldRendererMixin {
             float trainSpeed = TMMClient.getTrainSpeed(); // in kmh
             int chunkSize = 16;
             int tileWidth = 15 * chunkSize;
-            int height = 61;
+            int height = 120;
             int tileLength = 32 * chunkSize;
             int tileSize = tileLength * 3;
 
