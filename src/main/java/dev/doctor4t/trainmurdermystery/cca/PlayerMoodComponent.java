@@ -68,7 +68,7 @@ public class PlayerMoodComponent implements AutoSyncedComponent, ServerTickingCo
 
     public void reset() {
         this.currentPreference = TrainPreference.TRUE;
-        this.nextPreferenceTimer = 1;
+        this.nextPreferenceTimer = TMMGameConstants.TIME_TO_FIRST_TASK;
         this.fulfilled = false;
         this.setMood(1f);
         this.sync();

@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.doctor4t.trainmurdermystery.cca.PlayerMoodComponent;
+import dev.doctor4t.trainmurdermystery.game.TMMGameConstants;
 import dev.doctor4t.trainmurdermystery.game.TMMGameLoop;
 import dev.doctor4t.trainmurdermystery.index.TMMItems;
 import net.minecraft.entity.Entity;
@@ -50,9 +51,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             if (this.isSprinting()) {
                 sprintingTicks = Math.max(sprintingTicks - 1, 0);
             } else {
-                // 5s
-                float MAX_SPRINTING_TICKS = 100;
-                sprintingTicks = Math.min(sprintingTicks + 0.25f, MAX_SPRINTING_TICKS);
+                sprintingTicks = Math.min(sprintingTicks + 0.25f, TMMGameConstants.MAX_SPRINTING_TICKS);
             }
 
             if (sprintingTicks <= 0) {

@@ -19,6 +19,9 @@ public interface TMMGameConstants {
     int JAMMED_DOOR_TIME = getInTicks(1, 0);
     int LOCKPICK_JAM_COOLDOWN = getInTicks(5, 0);
 
+    // Sprint
+    int MAX_SPRINTING_TICKS = getInTicks(0, 10);
+
     // Game areas
     Box READY_AREA = new Box(-981, 1, -364, -813, 3, -358);
     BlockPos PLAY_POS = new BlockPos(-19, 122, -539);
@@ -40,10 +43,11 @@ public interface TMMGameConstants {
                     new Box(127, 121, -539, 147, 125, -533)
             ), "Library")
     ));
-    float MOOD_DRAIN = 1f / (30 * 20);
-    float MOOD_GAIN = 1f / (15 * 20);
-    int MIN_PREFERENCE_COOLDOWN = 2 * 60 * 20;
-    int MAX_PREFERENCE_COOLDOWN = 3 * 60 * 20;
+    float MOOD_DRAIN = 1f / getInTicks(3, 0);
+    float MOOD_GAIN = 1f / getInTicks(1, 0);
+    int MIN_PREFERENCE_COOLDOWN = getInTicks(2, 30);
+    int MAX_PREFERENCE_COOLDOWN = getInTicks(3, 30);
+    int TIME_TO_FIRST_TASK = getInTicks(3, 0);
 
     static int getInTicks(int minutes, int seconds) {
         return (minutes * 60 + seconds) * 20;
