@@ -139,6 +139,7 @@ public class GameFunctions {
             PlayerShopComponent.KEY.get(serverPlayerEntity).reset();
         }
         gameComponent.resetKillerList();
+        GameTimeComponent.KEY.get(world).reset();
 
         var roleSelector = ScoreboardRoleSelectorComponent.KEY.get(world.getScoreboard());
         var killerCount = (int) Math.floor(playerPool.size() * .2f);
@@ -220,6 +221,7 @@ public class GameFunctions {
             PlayerPsychoComponent.KEY.get(player).reset();
             PlayerNoteComponent.KEY.get(player).reset();
         }
+        GameTimeComponent.KEY.get(world).reset();
 
         // reset game component
         var gameComponent = TMMComponents.GAME.get(world);
@@ -269,7 +271,10 @@ public class GameFunctions {
         }
 
         var gameWorldComponent = TMMComponents.GAME.get(victim.getWorld());
-        if (gameWorldComponent.isCivilian(victim)) gameWorldComponent.decrementKillsLeft();
+        if (gameWorldComponent.isCivilian(victim)) {
+            gameWorldComponent.decrementKillsLeft();
+            GameTimeComponent.KEY.get(victim.getWorld()).addTime(GameConstants.TIME_ON_CIVILIAN_KILL);
+        }
     }
 
     public static boolean shouldDropOnDeath(@NotNull ItemStack stack) {
@@ -424,6 +429,6 @@ public class GameFunctions {
     }
 
     public enum WinStatus {
-        NONE, HITMEN, PASSENGERS
+        NONE, HITMEN, PASSENGERS, TIME
     }
 }
