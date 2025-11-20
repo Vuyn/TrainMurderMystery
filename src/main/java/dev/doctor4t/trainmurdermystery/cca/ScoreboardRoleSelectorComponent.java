@@ -38,10 +38,9 @@ public class ScoreboardRoleSelectorComponent implements AutoSyncedComponent {
     }
 
     public int reset() {
-        var count = this.killerRounds.size() + this.vigilanteRounds.size();
         this.killerRounds.clear();
         this.vigilanteRounds.clear();
-        return count > 0 ? 1 : 0;
+        return 1;
     }
 
     public void checkWeights(@NotNull ServerCommandSource source) {
