@@ -223,23 +223,23 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
     @Override
     public void readFromNbt(@NotNull NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
-        this.setLockedToSupporters(nbtCompound.getBoolean("LockedToSupporters"));
-        this.setWeightsEnabled(nbtCompound.getBoolean("EnableWeights"));
+        this.lockedToSupporters = nbtCompound.getBoolean("LockedToSupporters");
+        this.enableWeights = nbtCompound.getBoolean("EnableWeights");
 
-        this.setGameMode(GameMode.valueOf(nbtCompound.getString("GameMode")));
-        this.setGameStatus(GameStatus.valueOf(nbtCompound.getString("GameStatus")));
+        this.gameMode = GameMode.valueOf(nbtCompound.getString("GameMode"));
+        this.gameStatus = GameStatus.valueOf(nbtCompound.getString("GameStatus"));
 
-        this.setFade(nbtCompound.getInt("Fade"));
-        this.setPsychosActive(nbtCompound.getInt("PsychosActive"));
+        this.fade = nbtCompound.getInt("Fade");
+        this.psychosActive = nbtCompound.getInt("PsychosActive");
 
         for (TMMRoles.Role role : TMMRoles.ROLES) {
             this.setRoles(uuidListFromNbt(nbtCompound, role.identifier().toString()), role);
         }
 
         if (nbtCompound.contains("LooseEndWinner")) {
-            this.setLooseEndWinner(nbtCompound.getUuid("LooseEndWinner"));
+            this.looseEndWinner = nbtCompound.getUuid("LooseEndWinner");
         } else {
-            this.setLooseEndWinner(null);
+            this.looseEndWinner = null;
         }
     }
 
@@ -389,7 +389,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
             }
 
             if (world.getTime() % 20 == 0) {
-                serverWorld.getServer().execute(this::sync);
+                this.sync();
             }
         }
     }
